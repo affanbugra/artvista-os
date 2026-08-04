@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "sqlite": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sqlite", "./artvista.db"],
+      "description": "ArtVista OS veritabanına doğrudan erişim"
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "."],
+      "description": "Proje dosya sistemine erişim"
+    }
+  }
+}
