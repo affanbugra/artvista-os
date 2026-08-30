@@ -184,7 +184,7 @@ export function UrunForm({ open, onClose, onSaved, categories, editing, defaultC
                       src={imageUrl}
                       alt="Önizleme"
                       className="w-full h-full"
-                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", transform: "scale(1.65)", transformOrigin: "center", display: "block" }}
+                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", transform: "scale(2.2)", transformOrigin: "center", display: "block" }}
                       referrerPolicy="no-referrer"
                       onError={(e) => {
                         (e.target as HTMLElement).style.display = "none";

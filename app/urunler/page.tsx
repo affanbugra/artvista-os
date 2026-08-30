@@ -40,7 +40,7 @@ export default function UrunlerPage() {
   const [stokPaneli, setStokPaneli] = useState(false);
   const [previewImage, setPreviewImage] = useState<{ url: string; title: string; sku: string } | null>(null);
   const [modalViewMode, setModalViewMode] = useState<"a4" | "original">("a4");
-  const [modalZoom, setModalZoom] = useState<number>(1.65);
+  const [modalZoom, setModalZoom] = useState<number>(2.2);
   // key: "productId_size" → quantity
   const [printStokMap, setPrintStokMap] = useState<Record<string, number>>({});
   // inline edit: key "productId_size"
@@ -439,7 +439,7 @@ export default function UrunlerPage() {
                           type="button"
                           onClick={() => {
                             setModalViewMode("a4");
-                            setModalZoom(1.65);
+                            setModalZoom(2.2);
                             setPreviewImage({ url: product.imageUrl!, title: product.name, sku: product.id });
                           }}
                           className="relative group inline-block mx-auto cursor-pointer focus:outline-none"
@@ -454,7 +454,7 @@ export default function UrunlerPage() {
                             <img
                               src={product.imageUrl}
                               alt={product.name}
-                              style={{ width: "44px", height: "62px", minWidth: "44px", minHeight: "62px", maxWidth: "44px", maxHeight: "62px", objectFit: "cover", objectPosition: "center", transform: "scale(1.65)", transformOrigin: "center", display: "block" }}
+                              style={{ width: "44px", height: "62px", minWidth: "44px", minHeight: "62px", maxWidth: "44px", maxHeight: "62px", objectFit: "cover", objectPosition: "center", transform: "scale(2.2)", transformOrigin: "center", display: "block" }}
                               referrerPolicy="no-referrer"
                               loading="lazy"
                               onError={(e) => {
@@ -730,9 +730,9 @@ export default function UrunlerPage() {
                   <span className="text-[10px] text-zinc-400 font-medium mr-0.5">Odak:</span>
                   {[
                     { label: "1x", zoom: 1.0 },
-                    { label: "1.3x", zoom: 1.3 },
-                    { label: "1.65x (Önerilen)", zoom: 1.65 },
-                    { label: "2x", zoom: 2.0 },
+                    { label: "1.6x", zoom: 1.6 },
+                    { label: "2.2x (Önerilen)", zoom: 2.2 },
+                    { label: "2.7x (Maks)", zoom: 2.7 },
                   ].map((z) => (
                     <button
                       key={z.zoom}
