@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { ImageIcon, X, Link as LinkIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +22,7 @@ interface Props {
 export function UrunForm({ open, onClose, onSaved, categories, editing, defaultCategoryId }: Props) {
   const [name, setName] = useState("");
   const [sku, setSku] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [subCat1, setSubCat1] = useState("");
   const [subCat2, setSubCat2] = useState("");
@@ -42,6 +44,7 @@ export function UrunForm({ open, onClose, onSaved, categories, editing, defaultC
     const catId = editing?.categoryId ?? defaultCategoryId;
     setName(editing?.name ?? "");
     setSku(editing?.id ?? "");
+    setImageUrl(editing?.imageUrl ?? "");
     setCategoryId(catId ?? "");
     setSubCat1(editing?.subCategory1 ?? "");
     setSubCat2(editing?.subCategory2 ?? "");
@@ -127,7 +130,17 @@ export function UrunForm({ open, onClose, onSaved, categories, editing, defaultC
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true); setError("");
-    const payload = { id: sku, name, categoryId, subCategory1: subCat1, subCategory2: subCat2, isCustom, channels: selectedChannels, status };
+    const payload = {
+      id: sku,
+      name,
+      categoryId,
+      subCategory1: subCat1,
+      subCategory2: subCat2,
+      isCustom,
+      channels: selectedChannels,
+      status,
+      imageUrl: imageUrl.trim() || null,
+    };
     const res = editing
       ? await fetch(`/api/products/${editing.id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
       : await fetch("/api/products", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
@@ -147,6 +160,62 @@ export function UrunForm({ open, onClose, onSaved, categories, editing, defaultC
           <div className="space-y-1">
             <Label>Ürün Adı</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="ör: Adamlar - This Is" required autoFocus />
+          </div>
+
+          {/* Tasarım Görseli (URL) & A4 Dikey Önizleme */}
+          <div className="space-y-1.5 p-3 rounded-lg border border-zinc-200 bg-zinc-50/50">
+            <Label className="flex items-center justify-between text-xs font-semibold text-zinc-700">
+              <span className="flex items-center gap-1.5">
+                <LinkIcon size={13} className="text-zinc-500" />
+                Tasarım Görseli (URL)
+              </span>
+              <span className="text-zinc-400 font-normal text-[11px]">Trendyol, Shopier vb. resim linki</span>
+            </Label>
+            <div className="flex gap-3 items-center">
+              {/* A4 Dikey Önizleme Kutusu (Oran 1:1.414) */}
+              <div className="relative w-12 h-17 shrink-0 rounded-md border border-dashed border-zinc-300 bg-white overflow-hidden flex items-center justify-center group shadow-xs">
+                {imageUrl ? (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={imageUrl}
+                      alt="Önizleme"
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        (e.target as HTMLElement).style.display = "none";
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setImageUrl("")}
+                      className="absolute top-0.5 right-0.5 p-0.5 bg-black/70 hover:bg-black text-white rounded-full transition-opacity opacity-0 group-hover:opacity-100"
+                      title="Görseli Temizle"
+                    >
+                      <X size={10} />
+                    </button>
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center justify-center text-zinc-400 gap-0.5 p-1 text-center">
+                    <ImageIcon size={16} className="text-zinc-300" />
+                    <span className="text-[8px] font-medium leading-none text-zinc-400">A4</span>
+                  </div>
+                )}
+              </div>
+
+              {/* URL Giriş Alanı */}
+              <div className="flex-1 space-y-1">
+                <Input
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  placeholder="https://.../resim.jpg"
+                  className="text-xs font-mono h-9 bg-white"
+                />
+                <p className="text-[11px] text-zinc-400 leading-tight">
+                  Resim linkini yapıştırdığınızda solda dikey A4 önizlemesi belirir.
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-1">

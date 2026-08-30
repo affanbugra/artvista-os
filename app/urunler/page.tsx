@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { Plus, Pencil, Trash2, Settings2, Search, ChevronUp, ChevronDown, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Settings2, Search, ChevronUp, ChevronDown, X, ImageIcon, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { UrunForm } from "@/components/urunler/UrunForm";
@@ -38,6 +38,7 @@ export default function UrunlerPage() {
   const [editingKategori, setEditingKategori] = useState<Category | null>(null);
   const [ayarlarOpen, setAyarlarOpen] = useState(false);
   const [stokPaneli, setStokPaneli] = useState(false);
+  const [previewImage, setPreviewImage] = useState<{ url: string; title: string; sku: string } | null>(null);
   // key: "productId_size" → quantity
   const [printStokMap, setPrintStokMap] = useState<Record<string, number>>({});
   // inline edit: key "productId_size"
@@ -354,6 +355,7 @@ export default function UrunlerPage() {
           <table className="w-full text-sm">
             <thead className="bg-zinc-50 border-b border-zinc-200">
               <tr>
+                <th className="w-14 px-3 py-2.5 text-center text-xs font-medium text-zinc-500">Görsel</th>
                 {([["id", "SKU"], ["name", "Ürün Adı"]] as [typeof sortField, string][]).map(([field, label]) => (
                   <th
                     key={field}
@@ -394,6 +396,35 @@ export default function UrunlerPage() {
                 const channels: string[] = product.channels ? JSON.parse(product.channels) : [];
                 return (
                   <tr key={product.id} className="hover:bg-zinc-50 transition-colors">
+                    <td className="px-3 py-2 text-center align-middle w-14">
+                      {product.imageUrl ? (
+                        <button
+                          type="button"
+                          onClick={() => setPreviewImage({ url: product.imageUrl!, title: product.name, sku: product.id })}
+                          className="relative group block mx-auto cursor-pointer focus:outline-none"
+                          title="Büyütmek için tıklayın"
+                        >
+                          <div className="w-9 h-[51px] rounded-md overflow-hidden border border-zinc-200 bg-zinc-100 shadow-xs group-hover:ring-2 group-hover:ring-zinc-400 group-hover:scale-105 transition-all duration-150 flex items-center justify-center">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                              src={product.imageUrl}
+                              alt={product.name}
+                              className="w-full h-full object-cover"
+                              referrerPolicy="no-referrer"
+                              loading="lazy"
+                              onError={(e) => {
+                                (e.target as HTMLElement).style.display = "none";
+                              }}
+                            />
+                          </div>
+                        </button>
+                      ) : (
+                        <div className="w-9 h-[51px] mx-auto rounded-md border border-dashed border-zinc-200 bg-zinc-50/70 flex flex-col items-center justify-center text-zinc-300 gap-0.5" title="Görsel yok">
+                          <ImageIcon size={14} className="text-zinc-300" />
+                          <span className="text-[7px] text-zinc-400 font-mono">A4</span>
+                        </div>
+                      )}
+                    </td>
                     <td className="px-4 py-3 font-mono text-xs text-zinc-500">
                       {product.id}
                       {product.isCustom === 1 && <span className="ml-1 text-purple-500">-9</span>}
@@ -511,6 +542,61 @@ export default function UrunlerPage() {
           onClose={() => setAyarlarOpen(false)}
           category={activeCategory}
         />
+      )}
+
+      {/* Görsel Büyütme (Lightbox) Modal */}
+      {previewImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div
+            className="relative bg-white rounded-2xl shadow-2xl overflow-hidden max-w-sm w-full border border-zinc-200 animate-in fade-in zoom-in-95 duration-150 flex flex-col items-center p-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Kapat Butonu */}
+            <button
+              onClick={() => setPreviewImage(null)}
+              className="absolute top-3 right-3 p-1.5 rounded-full bg-zinc-100 text-zinc-600 hover:bg-zinc-200 transition-colors z-10"
+              title="Kapat"
+            >
+              <X size={16} />
+            </button>
+
+            {/* Başlık & SKU */}
+            <div className="text-center mb-3 pr-8 pl-2 w-full">
+              <h3 className="font-semibold text-sm text-zinc-900 truncate" title={previewImage.title}>
+                {previewImage.title}
+              </h3>
+              <p className="text-xs font-mono text-zinc-400 mt-0.5">{previewImage.sku}</p>
+            </div>
+
+            {/* A4 Oranında Büyük Görsel */}
+            <div className="w-full max-w-[280px] aspect-[1/1.414] rounded-xl overflow-hidden border border-zinc-200 bg-zinc-50 shadow-inner flex items-center justify-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={previewImage.url}
+                alt={previewImage.title}
+                className="w-full h-full object-contain bg-zinc-100"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+
+            {/* Alt Bilgi & Bağlantı */}
+            <div className="flex items-center justify-between w-full mt-4 pt-3 border-t border-zinc-100 text-xs text-zinc-500">
+              <span className="text-[11px] text-zinc-400 font-medium">A4 Dikey Tasarım</span>
+              <a
+                href={previewImage.url}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-1.5 text-xs font-medium text-zinc-700 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200 px-3 py-1.5 rounded-lg transition-colors"
+              >
+                <ExternalLink size={13} />
+                Yeni Sekmede Aç
+              </a>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
