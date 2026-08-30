@@ -409,7 +409,7 @@ export default function UrunlerPage() {
                             <img
                               src={product.imageUrl}
                               alt={product.name}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover object-center"
                               referrerPolicy="no-referrer"
                               loading="lazy"
                               onError={(e) => {
@@ -571,20 +571,20 @@ export default function UrunlerPage() {
               <p className="text-xs font-mono text-zinc-400 mt-0.5">{previewImage.sku}</p>
             </div>
 
-            {/* A4 Oranında Büyük Görsel */}
-            <div className="w-full max-w-[280px] aspect-[1/1.414] rounded-xl overflow-hidden border border-zinc-200 bg-zinc-50 shadow-inner flex items-center justify-center">
+            {/* A4 Oranında Büyük Görsel (Ortadan A4 Dikey Kırpma) */}
+            <div className="w-full max-w-[300px] aspect-[1/1.414] rounded-xl overflow-hidden border border-zinc-200 bg-zinc-100 shadow-inner flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={previewImage.url}
                 alt={previewImage.title}
-                className="w-full h-full object-contain bg-zinc-100"
+                className="w-full h-full object-cover object-center"
                 referrerPolicy="no-referrer"
               />
             </div>
 
             {/* Alt Bilgi & Bağlantı */}
             <div className="flex items-center justify-between w-full mt-4 pt-3 border-t border-zinc-100 text-xs text-zinc-500">
-              <span className="text-[11px] text-zinc-400 font-medium">A4 Dikey Tasarım</span>
+              <span className="text-[11px] text-zinc-400 font-medium">A4 Dikey (Ortalanmış)</span>
               <a
                 href={previewImage.url}
                 target="_blank"
@@ -592,7 +592,7 @@ export default function UrunlerPage() {
                 className="flex items-center gap-1.5 text-xs font-medium text-zinc-700 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200 px-3 py-1.5 rounded-lg transition-colors"
               >
                 <ExternalLink size={13} />
-                Yeni Sekmede Aç
+                Orijinal Görseli Aç
               </a>
             </div>
           </div>

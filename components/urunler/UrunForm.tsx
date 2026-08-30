@@ -180,7 +180,7 @@ export function UrunForm({ open, onClose, onSaved, categories, editing, defaultC
                     <img
                       src={imageUrl}
                       alt="Önizleme"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover object-center"
                       referrerPolicy="no-referrer"
                       onError={(e) => {
                         (e.target as HTMLElement).style.display = "none";
