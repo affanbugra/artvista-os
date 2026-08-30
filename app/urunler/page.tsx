@@ -94,15 +94,35 @@ export default function UrunlerPage() {
 
   async function deleteProduct(id: string) {
     if (!confirm("Bu ürünü silmek istediğinize emin misiniz?")) return;
-    await fetch(`/api/products/${id}`, { method: "DELETE" });
-    fetchAll();
+    try {
+      const res = await fetch(`/api/products/${encodeURIComponent(id)}`, { method: "DELETE" });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "Ürün silinirken bir hata oluştu.");
+        return;
+      }
+      fetchAll();
+    } catch (err) {
+      console.error(err);
+      alert("Ürün silinirken sunucuyla bağlantı kurulamadı.");
+    }
   }
 
   async function deleteCategory(id: string) {
     if (!confirm("Bu kategoriyi silmek istediğinize emin misiniz?")) return;
-    await fetch(`/api/categories/${id}`, { method: "DELETE" });
-    setActiveTab("all");
-    fetchAll();
+    try {
+      const res = await fetch(`/api/categories/${encodeURIComponent(id)}`, { method: "DELETE" });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "Kategori silinirken bir hata oluştu.");
+        return;
+      }
+      setActiveTab("all");
+      fetchAll();
+    } catch (err) {
+      console.error(err);
+      alert("Kategori silinirken sunucuyla bağlantı kurulamadı.");
+    }
   }
 
   const customProducts = products.filter((p) => p.product.isCustom === 1);

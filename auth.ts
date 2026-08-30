@@ -15,10 +15,18 @@ import Google from "next-auth/providers/google";
  */
 export const AUTH_ENABLED = Boolean(process.env.AUTH_GOOGLE_ID);
 
-const allowedEmails = (process.env.ALLOWED_EMAILS ?? "")
+const envEmails = (process.env.ALLOWED_EMAILS ?? "")
   .split(",")
   .map((e) => e.trim().toLowerCase())
   .filter(Boolean);
+
+// Kod seviyesinde tanımlı ve ortam değişkeninden gelen izinli e-postalar
+const allowedEmails = Array.from(
+  new Set([
+    "info@virdapp.com",
+    ...envEmails,
+  ])
+);
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET ?? "artvista-local-dev-secret",
