@@ -580,42 +580,15 @@ export default function UrunlerPage() {
         </div>
       )}
 
-      {/* Trendyol Satış Teyit Sayacı (3 Çerçeve Rengi Çarpanı) */}
-      <div className="rounded-xl border border-orange-200/80 bg-gradient-to-r from-orange-50/80 via-amber-50/50 to-orange-50/30 p-4 shadow-xs">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-orange-500 text-white font-bold text-sm shadow-xs tracking-tight">
-              TY
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-zinc-900 text-sm">
-                  Trendyol Satış Teyit Mekanizması
-                </span>
-                <span className="inline-flex items-center rounded-full border border-orange-200 bg-orange-100/90 px-2 py-0.5 text-[11px] font-medium text-orange-800">
-                  3 Çerçeve Rengi (Ahşap, Siyah, Beyaz)
-                </span>
-              </div>
-              <p className="text-xs text-zinc-500 mt-0.5">
-                Telif veya arşivleme teyidi için Trendyol satıcı panelinizdeki toplam aktif ilan sayısıyla karşılaştırın.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 rounded-lg border border-orange-200/90 bg-white px-4 py-2.5 shadow-xs">
-            <div className="text-right">
-              <div className="text-xs font-semibold text-zinc-700">
-                Trendyol'da satışta olması gereken aktif ürün sayısı:
-              </div>
-              <div className="text-[11px] text-zinc-400 font-mono">
-                ({trendyolActiveProducts.length} aktif tasarım × 3 renk varyantı)
-              </div>
-            </div>
-            <div className="rounded-md border border-orange-400/80 bg-orange-500 px-3 py-1 font-mono text-2xl font-bold text-white shadow-xs">
-              {trendyolListingCount}
-            </div>
-          </div>
-        </div>
+      {/* Sayfa altı sade teyit yazısı */}
+      <div className="flex items-center justify-between text-xs text-zinc-500 pt-1 pb-3">
+        <span>Toplam {filteredProducts.length} ürün listeleniyor</span>
+        <span>
+          Trendyol&apos;da satışta olması gereken aktif ürün sayısı:{" "}
+          <strong className="font-mono text-orange-600 font-bold text-sm">
+            {trendyolListingCount}
+          </strong>
+        </span>
       </div>
 
       <UrunForm
