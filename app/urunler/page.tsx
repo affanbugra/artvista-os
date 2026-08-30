@@ -39,6 +39,7 @@ export default function UrunlerPage() {
   const [ayarlarOpen, setAyarlarOpen] = useState(false);
   const [stokPaneli, setStokPaneli] = useState(false);
   const [previewImage, setPreviewImage] = useState<{ url: string; title: string; sku: string } | null>(null);
+  const [modalViewMode, setModalViewMode] = useState<"a4" | "original">("a4");
   // key: "productId_size" → quantity
   const [printStokMap, setPrintStokMap] = useState<Record<string, number>>({});
   // inline edit: key "productId_size"
@@ -404,24 +405,27 @@ export default function UrunlerPage() {
                 const channels: string[] = product.channels ? JSON.parse(product.channels) : [];
                 return (
                   <tr key={product.id} className="hover:bg-zinc-50 transition-colors">
-                    <td className="px-3 py-2 text-center align-middle w-16">
+                    <td className="px-3 py-2 text-center align-middle" style={{ width: "70px", minWidth: "70px" }}>
                       {product.imageUrl ? (
                         <button
                           type="button"
-                          onClick={() => setPreviewImage({ url: product.imageUrl!, title: product.name, sku: product.id })}
-                          className="relative group block mx-auto cursor-pointer focus:outline-none"
+                          onClick={() => {
+                            setModalViewMode("a4");
+                            setPreviewImage({ url: product.imageUrl!, title: product.name, sku: product.id });
+                          }}
+                          className="relative group inline-block mx-auto cursor-pointer focus:outline-none"
                           title="Büyütmek için tıklayın"
+                          style={{ width: "44px", height: "62px" }}
                         >
                           <div
                             className="rounded-lg overflow-hidden border border-zinc-200/90 bg-zinc-100 shadow-xs group-hover:ring-2 group-hover:ring-zinc-400 group-hover:scale-105 transition-all duration-150 flex items-center justify-center mx-auto"
-                            style={{ width: "42px", height: "60px", minWidth: "42px", minHeight: "60px" }}
+                            style={{ width: "44px", height: "62px", minWidth: "44px", minHeight: "62px", maxWidth: "44px", maxHeight: "62px", position: "relative" }}
                           >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={product.imageUrl}
                               alt={product.name}
-                              className="w-full h-full"
-                              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
+                              style={{ width: "44px", height: "62px", minWidth: "44px", minHeight: "62px", maxWidth: "44px", maxHeight: "62px", objectFit: "cover", objectPosition: "center", display: "block" }}
                               referrerPolicy="no-referrer"
                               loading="lazy"
                               onError={(e) => {
@@ -433,7 +437,7 @@ export default function UrunlerPage() {
                       ) : (
                         <div
                           className="mx-auto rounded-lg border border-dashed border-zinc-200 bg-zinc-50/70 flex flex-col items-center justify-center text-zinc-300 gap-0.5"
-                          style={{ width: "42px", height: "60px", minWidth: "42px", minHeight: "60px" }}
+                          style={{ width: "44px", height: "62px", minWidth: "44px", minHeight: "62px", maxWidth: "44px", maxHeight: "62px" }}
                           title="Görsel yok"
                         >
                           <ImageIcon size={15} className="text-zinc-300" />
@@ -574,17 +578,17 @@ export default function UrunlerPage() {
       {/* Görsel Büyütme (Lightbox) Modal */}
       {previewImage && (
         <div
-          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4"
           onClick={() => setPreviewImage(null)}
         >
           <div
-            className="relative bg-white rounded-2xl shadow-2xl overflow-hidden max-w-sm w-full border border-zinc-200 animate-in fade-in zoom-in-95 duration-150 flex flex-col items-center p-4"
+            className="relative bg-white rounded-2xl shadow-2xl overflow-hidden max-w-md w-full border border-zinc-200 animate-in fade-in zoom-in-95 duration-150 flex flex-col items-center p-5"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Kapat Butonu */}
             <button
               onClick={() => setPreviewImage(null)}
-              className="absolute top-3 right-3 p-1.5 rounded-full bg-zinc-100 text-zinc-600 hover:bg-zinc-200 transition-colors z-10"
+              className="absolute top-3.5 right-3.5 p-1.5 rounded-full bg-zinc-100 text-zinc-600 hover:bg-zinc-200 transition-colors z-10"
               title="Kapat"
             >
               <X size={16} />
@@ -598,24 +602,68 @@ export default function UrunlerPage() {
               <p className="text-xs font-mono text-zinc-400 mt-0.5">{previewImage.sku}</p>
             </div>
 
-            {/* A4 Oranında Büyük Görsel (Ortadan A4 Dikey Kırpma) */}
-            <div
-              className="w-full max-w-[300px] rounded-xl overflow-hidden border border-zinc-200 bg-zinc-100 shadow-inner flex items-center justify-center"
-              style={{ aspectRatio: "1 / 1.414" }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={previewImage.url}
-                alt={previewImage.title}
-                className="w-full h-full object-cover object-center"
-                style={{ objectFit: "cover", objectPosition: "center", width: "100%", height: "100%" }}
-                referrerPolicy="no-referrer"
-              />
+            {/* Görünüm Seçimi (A4 Kırpma vs Tam Resim) */}
+            <div className="flex bg-zinc-100 p-0.5 rounded-lg text-xs font-medium mb-3 w-full max-w-[280px]">
+              <button
+                type="button"
+                onClick={() => setModalViewMode("a4")}
+                className={`flex-1 py-1 rounded-md transition-all ${
+                  modalViewMode === "a4"
+                    ? "bg-white text-zinc-900 shadow-xs font-semibold"
+                    : "text-zinc-500 hover:text-zinc-700"
+                }`}
+              >
+                A4 Çerçeve (Kırpılmış)
+              </button>
+              <button
+                type="button"
+                onClick={() => setModalViewMode("original")}
+                className={`flex-1 py-1 rounded-md transition-all ${
+                  modalViewMode === "original"
+                    ? "bg-white text-zinc-900 shadow-xs font-semibold"
+                    : "text-zinc-500 hover:text-zinc-700"
+                }`}
+              >
+                Tam Mockup
+              </button>
             </div>
+
+            {/* Görsel Alanı */}
+            {modalViewMode === "a4" ? (
+              /* A4 Dikey Kesin Çerçeve (300px × 424px, 1:1.414) */
+              <div
+                className="rounded-xl overflow-hidden border border-zinc-200 bg-zinc-100 shadow-inner flex items-center justify-center mx-auto"
+                style={{ width: "300px", height: "424px", minWidth: "300px", minHeight: "424px", maxWidth: "300px", maxHeight: "424px" }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={previewImage.url}
+                  alt={previewImage.title}
+                  style={{ width: "300px", height: "424px", minWidth: "300px", minHeight: "424px", maxWidth: "300px", maxHeight: "424px", objectFit: "cover", objectPosition: "center", display: "block" }}
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+            ) : (
+              /* Tam Mockup (Kırpmasız) */
+              <div
+                className="rounded-xl overflow-hidden border border-zinc-200 bg-zinc-100 shadow-inner flex items-center justify-center mx-auto"
+                style={{ width: "300px", height: "300px", minWidth: "300px", minHeight: "300px", maxWidth: "300px", maxHeight: "300px" }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={previewImage.url}
+                  alt={previewImage.title}
+                  style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+            )}
 
             {/* Alt Bilgi & Bağlantı */}
             <div className="flex items-center justify-between w-full mt-4 pt-3 border-t border-zinc-100 text-xs text-zinc-500">
-              <span className="text-[11px] text-zinc-400 font-medium">A4 Dikey (Ortalanmış)</span>
+              <span className="text-[11px] text-zinc-400 font-medium">
+                {modalViewMode === "a4" ? "A4 Dikey Poster Odaklı" : "Orijinal Mockup"}
+              </span>
               <a
                 href={previewImage.url}
                 target="_blank"
@@ -623,7 +671,7 @@ export default function UrunlerPage() {
                 className="flex items-center gap-1.5 text-xs font-medium text-zinc-700 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200 px-3 py-1.5 rounded-lg transition-colors"
               >
                 <ExternalLink size={13} />
-                Orijinal Görseli Aç
+                Yeni Sekmede Aç
               </a>
             </div>
           </div>
