@@ -40,6 +40,7 @@ export default function UrunlerPage() {
   const [stokPaneli, setStokPaneli] = useState(false);
   const [previewImage, setPreviewImage] = useState<{ url: string; title: string; sku: string } | null>(null);
   const [modalViewMode, setModalViewMode] = useState<"a4" | "original">("a4");
+  const [modalZoom, setModalZoom] = useState<number>(1.65);
   // key: "productId_size" → quantity
   const [printStokMap, setPrintStokMap] = useState<Record<string, number>>({});
   // inline edit: key "productId_size"
@@ -411,6 +412,7 @@ export default function UrunlerPage() {
                           type="button"
                           onClick={() => {
                             setModalViewMode("a4");
+                            setModalZoom(1.65);
                             setPreviewImage({ url: product.imageUrl!, title: product.name, sku: product.id });
                           }}
                           className="relative group inline-block mx-auto cursor-pointer focus:outline-none"
@@ -419,13 +421,13 @@ export default function UrunlerPage() {
                         >
                           <div
                             className="rounded-lg overflow-hidden border border-zinc-200/90 bg-zinc-100 shadow-xs group-hover:ring-2 group-hover:ring-zinc-400 group-hover:scale-105 transition-all duration-150 flex items-center justify-center mx-auto"
-                            style={{ width: "44px", height: "62px", minWidth: "44px", minHeight: "62px", maxWidth: "44px", maxHeight: "62px", position: "relative" }}
+                            style={{ width: "44px", height: "62px", minWidth: "44px", minHeight: "62px", maxWidth: "44px", maxHeight: "62px", position: "relative", overflow: "hidden" }}
                           >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={product.imageUrl}
                               alt={product.name}
-                              style={{ width: "44px", height: "62px", minWidth: "44px", minHeight: "62px", maxWidth: "44px", maxHeight: "62px", objectFit: "cover", objectPosition: "center", display: "block" }}
+                              style={{ width: "44px", height: "62px", minWidth: "44px", minHeight: "62px", maxWidth: "44px", maxHeight: "62px", objectFit: "cover", objectPosition: "center", transform: "scale(1.65)", transformOrigin: "center", display: "block" }}
                               referrerPolicy="no-referrer"
                               loading="lazy"
                               onError={(e) => {
@@ -631,18 +633,57 @@ export default function UrunlerPage() {
             {/* Görsel Alanı */}
             {modalViewMode === "a4" ? (
               /* A4 Dikey Kesin Çerçeve (300px × 424px, 1:1.414) */
-              <div
-                className="rounded-xl overflow-hidden border border-zinc-200 bg-zinc-100 shadow-inner flex items-center justify-center mx-auto"
-                style={{ width: "300px", height: "424px", minWidth: "300px", minHeight: "424px", maxWidth: "300px", maxHeight: "424px" }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={previewImage.url}
-                  alt={previewImage.title}
-                  style={{ width: "300px", height: "424px", minWidth: "300px", minHeight: "424px", maxWidth: "300px", maxHeight: "424px", objectFit: "cover", objectPosition: "center", display: "block" }}
-                  referrerPolicy="no-referrer"
-                />
-              </div>
+              <>
+                <div
+                  className="rounded-xl overflow-hidden border border-zinc-200 bg-zinc-100 shadow-inner flex items-center justify-center mx-auto"
+                  style={{ width: "300px", height: "424px", minWidth: "300px", minHeight: "424px", maxWidth: "300px", maxHeight: "424px", position: "relative" }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={previewImage.url}
+                    alt={previewImage.title}
+                    style={{
+                      width: "300px",
+                      height: "424px",
+                      minWidth: "300px",
+                      minHeight: "424px",
+                      maxWidth: "300px",
+                      maxHeight: "424px",
+                      objectFit: "cover",
+                      objectPosition: "center",
+                      transform: `scale(${modalZoom})`,
+                      transformOrigin: "center",
+                      transition: "transform 0.15s ease-out",
+                      display: "block",
+                    }}
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+
+                {/* Yakınlaştırma (Zoom) Butonları */}
+                <div className="flex items-center justify-center gap-1.5 mt-2.5">
+                  <span className="text-[10px] text-zinc-400 font-medium mr-0.5">Odak:</span>
+                  {[
+                    { label: "1x", zoom: 1.0 },
+                    { label: "1.3x", zoom: 1.3 },
+                    { label: "1.65x (Önerilen)", zoom: 1.65 },
+                    { label: "2x", zoom: 2.0 },
+                  ].map((z) => (
+                    <button
+                      key={z.zoom}
+                      type="button"
+                      onClick={() => setModalZoom(z.zoom)}
+                      className={`px-2 py-0.5 rounded text-[11px] font-medium transition-all ${
+                        modalZoom === z.zoom
+                          ? "bg-zinc-800 text-white font-semibold shadow-xs"
+                          : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+                      }`}
+                    >
+                      {z.label}
+                    </button>
+                  ))}
+                </div>
+              </>
             ) : (
               /* Tam Mockup (Kırpmasız) */
               <div
