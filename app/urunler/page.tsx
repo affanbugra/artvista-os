@@ -355,7 +355,7 @@ export default function UrunlerPage() {
           <table className="w-full text-sm">
             <thead className="bg-zinc-50 border-b border-zinc-200">
               <tr>
-                <th className="w-14 px-3 py-2.5 text-center text-xs font-medium text-zinc-500">Görsel</th>
+                <th className="w-16 px-3 py-2.5 text-center text-xs font-medium text-zinc-500">Görsel</th>
                 {([["id", "SKU"], ["name", "Ürün Adı"]] as [typeof sortField, string][]).map(([field, label]) => (
                   <th
                     key={field}
@@ -396,7 +396,7 @@ export default function UrunlerPage() {
                 const channels: string[] = product.channels ? JSON.parse(product.channels) : [];
                 return (
                   <tr key={product.id} className="hover:bg-zinc-50 transition-colors">
-                    <td className="px-3 py-2 text-center align-middle w-14">
+                    <td className="px-3 py-2 text-center align-middle w-16">
                       {product.imageUrl ? (
                         <button
                           type="button"
@@ -404,12 +404,16 @@ export default function UrunlerPage() {
                           className="relative group block mx-auto cursor-pointer focus:outline-none"
                           title="Büyütmek için tıklayın"
                         >
-                          <div className="w-9 h-[51px] rounded-md overflow-hidden border border-zinc-200 bg-zinc-100 shadow-xs group-hover:ring-2 group-hover:ring-zinc-400 group-hover:scale-105 transition-all duration-150 flex items-center justify-center">
+                          <div
+                            className="rounded-lg overflow-hidden border border-zinc-200/90 bg-zinc-100 shadow-xs group-hover:ring-2 group-hover:ring-zinc-400 group-hover:scale-105 transition-all duration-150 flex items-center justify-center mx-auto"
+                            style={{ width: "42px", height: "60px", minWidth: "42px", minHeight: "60px" }}
+                          >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                               src={product.imageUrl}
                               alt={product.name}
-                              className="w-full h-full object-cover object-center"
+                              className="w-full h-full"
+                              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
                               referrerPolicy="no-referrer"
                               loading="lazy"
                               onError={(e) => {
@@ -419,9 +423,13 @@ export default function UrunlerPage() {
                           </div>
                         </button>
                       ) : (
-                        <div className="w-9 h-[51px] mx-auto rounded-md border border-dashed border-zinc-200 bg-zinc-50/70 flex flex-col items-center justify-center text-zinc-300 gap-0.5" title="Görsel yok">
-                          <ImageIcon size={14} className="text-zinc-300" />
-                          <span className="text-[7px] text-zinc-400 font-mono">A4</span>
+                        <div
+                          className="mx-auto rounded-lg border border-dashed border-zinc-200 bg-zinc-50/70 flex flex-col items-center justify-center text-zinc-300 gap-0.5"
+                          style={{ width: "42px", height: "60px", minWidth: "42px", minHeight: "60px" }}
+                          title="Görsel yok"
+                        >
+                          <ImageIcon size={15} className="text-zinc-300" />
+                          <span className="text-[8px] font-semibold text-zinc-400 font-mono">A4</span>
                         </div>
                       )}
                     </td>
@@ -572,12 +580,16 @@ export default function UrunlerPage() {
             </div>
 
             {/* A4 Oranında Büyük Görsel (Ortadan A4 Dikey Kırpma) */}
-            <div className="w-full max-w-[300px] aspect-[1/1.414] rounded-xl overflow-hidden border border-zinc-200 bg-zinc-100 shadow-inner flex items-center justify-center">
+            <div
+              className="w-full max-w-[300px] rounded-xl overflow-hidden border border-zinc-200 bg-zinc-100 shadow-inner flex items-center justify-center"
+              style={{ aspectRatio: "1 / 1.414" }}
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={previewImage.url}
                 alt={previewImage.title}
                 className="w-full h-full object-cover object-center"
+                style={{ objectFit: "cover", objectPosition: "center", width: "100%", height: "100%" }}
                 referrerPolicy="no-referrer"
               />
             </div>

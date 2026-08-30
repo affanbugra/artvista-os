@@ -173,14 +173,18 @@ export function UrunForm({ open, onClose, onSaved, categories, editing, defaultC
             </Label>
             <div className="flex gap-3 items-center">
               {/* A4 Dikey Önizleme Kutusu (Oran 1:1.414) */}
-              <div className="relative w-12 h-17 shrink-0 rounded-md border border-dashed border-zinc-300 bg-white overflow-hidden flex items-center justify-center group shadow-xs">
+              <div
+                className="relative rounded-lg border border-dashed border-zinc-300 bg-white overflow-hidden flex items-center justify-center group shadow-xs shrink-0"
+                style={{ width: "48px", height: "68px", minWidth: "48px", minHeight: "68px" }}
+              >
                 {imageUrl ? (
                   <>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={imageUrl}
                       alt="Önizleme"
-                      className="w-full h-full object-cover object-center"
+                      className="w-full h-full"
+                      style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
                       referrerPolicy="no-referrer"
                       onError={(e) => {
                         (e.target as HTMLElement).style.display = "none";
@@ -189,7 +193,7 @@ export function UrunForm({ open, onClose, onSaved, categories, editing, defaultC
                     <button
                       type="button"
                       onClick={() => setImageUrl("")}
-                      className="absolute top-0.5 right-0.5 p-0.5 bg-black/70 hover:bg-black text-white rounded-full transition-opacity opacity-0 group-hover:opacity-100"
+                      className="absolute top-1 right-1 p-0.5 bg-black/70 hover:bg-black text-white rounded-full transition-opacity opacity-0 group-hover:opacity-100"
                       title="Görseli Temizle"
                     >
                       <X size={10} />
@@ -197,8 +201,8 @@ export function UrunForm({ open, onClose, onSaved, categories, editing, defaultC
                   </>
                 ) : (
                   <div className="flex flex-col items-center justify-center text-zinc-400 gap-0.5 p-1 text-center">
-                    <ImageIcon size={16} className="text-zinc-300" />
-                    <span className="text-[8px] font-medium leading-none text-zinc-400">A4</span>
+                    <ImageIcon size={18} className="text-zinc-300" />
+                    <span className="text-[8px] font-semibold leading-none text-zinc-400">A4 Dikey</span>
                   </div>
                 )}
               </div>
