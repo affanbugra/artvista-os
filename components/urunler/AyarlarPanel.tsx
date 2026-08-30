@@ -215,7 +215,12 @@ export function AyarlarPanel({ open, onClose, category }: Props) {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-lg max-h-[85vh] overflow-hidden flex flex-col">
         <DialogHeader>
-          <DialogTitle>Ayarlar — {category.name}</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <span>Ayarlar</span>
+            <span className="text-zinc-300 font-normal">—</span>
+            <span className="font-mono text-xs bg-zinc-100 text-zinc-600 px-1.5 py-0.5 rounded border border-zinc-200">{category.id}</span>
+            <span>{category.name}</span>
+          </DialogTitle>
         </DialogHeader>
 
         <div className="flex gap-1 bg-zinc-100 p-1 rounded-lg">

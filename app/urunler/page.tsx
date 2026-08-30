@@ -245,13 +245,15 @@ export default function UrunlerPage() {
           <button
             key={cat.id}
             onClick={() => setActiveTab(cat.id)}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors flex items-center gap-1.5 ${
               activeTab === cat.id
-                ? "bg-white text-zinc-900 shadow-sm"
+                ? "bg-white text-zinc-900 shadow-sm font-semibold"
                 : "text-zinc-500 hover:text-zinc-700"
             }`}
           >
-            {cat.name} ({totalByCategory(cat.id)})
+            <span className="font-mono text-[11px] opacity-60 font-semibold">{cat.id}</span>
+            <span>{cat.name}</span>
+            <span className="text-[11px] opacity-50 font-normal">({totalByCategory(cat.id)})</span>
           </button>
         ))}
       </div>
@@ -312,10 +314,16 @@ export default function UrunlerPage() {
       {activeTab !== "all" && activeTab !== "ozel-tasarim" && activeCategory && (
         <div className="flex items-center gap-2 -mt-3">
           <span className="text-xs text-zinc-400">Kategori:</span>
+          <span className="font-mono text-xs font-semibold text-zinc-700 bg-zinc-100 px-1.5 py-0.5 rounded border border-zinc-200">
+            {activeCategory.id}
+          </span>
+          <span className="text-xs font-medium text-zinc-800 -ml-1">
+            {activeCategory.name}
+          </span>
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 text-xs"
+            className="h-7 text-xs ml-1"
             onClick={() => { setEditingKategori(activeCategory); setKategoriFormOpen(true); }}
           >
             <Pencil size={12} className="mr-1" /> Düzenle
@@ -440,8 +448,19 @@ export default function UrunlerPage() {
                     <td className="px-4 py-3 font-medium text-zinc-900">{product.name}</td>
                     {!stokPaneli && (
                       <>
-                        <td className="px-4 py-3 text-xs text-zinc-500">
-                          {categories.find((c) => c.id === product.categoryId)?.name ?? product.categoryId}
+                        <td className="px-4 py-3 text-xs text-zinc-600">
+                          {(() => {
+                            const cat = categories.find((c) => c.id === product.categoryId);
+                            if (!cat) return <span className="font-mono text-zinc-400">{product.categoryId || "—"}</span>;
+                            return (
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-mono text-[11px] font-semibold text-zinc-500 bg-zinc-100 px-1.5 py-0.5 rounded border border-zinc-200/80 leading-none">
+                                  {cat.id}
+                                </span>
+                                <span className="font-medium text-zinc-800">{cat.name}</span>
+                              </div>
+                            );
+                          })()}
                         </td>
                         <td className="px-4 py-3">
                           {product.subCategory1 && (() => { const c = strToColor(product.subCategory1!); return <span className="px-2 py-0.5 rounded-full text-xs font-medium" style={{ backgroundColor: c.bg, color: c.text }}>{product.subCategory1}</span>; })()}
